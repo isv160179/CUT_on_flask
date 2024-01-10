@@ -5,39 +5,40 @@ from wtforms.validators import (
 )
 
 from settings import (
-    ORIGINAL_URL_MIN_LENGHT, ORIGINAL_URL_MAX_LENGHT, SHORT_URL_MIN_LENGHT,
+    LONG_URL_MIN_LENGHT, LONG_URL_MAX_LENGHT, SHORT_URL_MIN_LENGHT,
     SHORT_URL_MAX_LENGHT, WRONG_LENGTH, WRONG_BLANK, WRONG_URL,
-    PATTERN_SHORT_URL, WRONG_CHARS, WRONG_UNIQUE
+    PATTERN_SHORT_URL, WRONG_CHARS_URL, WRONG_UNIQUE, FORM_LABEL_LONG_URL,
+    FORM_LABEL_SHOT_URL, FORM_LABEL_BUTTON_CREATE
 )
 from .models import URLMap
 
 
 class URLMapForm(FlaskForm):
     original_link = URLField(
-        label='Оригинальная ссылка',
+        label=FORM_LABEL_LONG_URL,
         validators=[
-            Length(
-                min=ORIGINAL_URL_MIN_LENGHT,
-                max=ORIGINAL_URL_MAX_LENGHT,
-                message=WRONG_LENGTH
-            ),
             DataRequired(message=WRONG_BLANK),
-            URL(require_tld=True, message=WRONG_URL)
+            URL(require_tld=True, message=WRONG_URL),
+            Length(
+                min=LONG_URL_MIN_LENGHT,
+                max=LONG_URL_MAX_LENGHT,
+                message=WRONG_LENGTH
+            )
         ]
     )
     custom_id = URLField(
-        label='Пользовательский вариант короткой ссылки',
+        label=FORM_LABEL_SHOT_URL,
         validators=[
+            Optional(),
+            Regexp(PATTERN_SHORT_URL, message=WRONG_CHARS_URL),
             Length(
                 SHORT_URL_MIN_LENGHT,
                 SHORT_URL_MAX_LENGHT,
                 WRONG_LENGTH
-            ),
-            Optional(),
-            Regexp(PATTERN_SHORT_URL, message=WRONG_CHARS)
+            )
         ]
     )
-    submit = SubmitField('Создать короткую ссылку.')
+    submit = SubmitField(label=FORM_LABEL_BUTTON_CREATE)
 
     def validate_custom_id(self, custom_id):
         if custom_id.data and URLMap.query.filter_by(
