@@ -3,7 +3,7 @@ from http import HTTPStatus
 from flask import jsonify, request
 
 from . import app, db
-from .constants import WRONG_API_ID_NOT_FOUND
+from .constants import WRONG_API_ID_NOT_FOUND, WRONG_API_NOT_DATA_IN_REQUEST
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
 from .validators import validate_long_url, validate_short_url
@@ -13,11 +13,11 @@ from .views import get_unique_short_id
 @app.route('/api/id/', methods=['POST'])
 def create_id():
     data = request.get_json()
-    validate_long_url(data['url'])
-    if data.get('custom_id'):
-        validate_short_url(data['custom_id'])
-    else:
+    validate_long_url(data)
+    if not data.get('custom_id'):
         data['custom_id'] = get_unique_short_id()
+    else:
+        validate_short_url(data)
     url_map = URLMap()
     url_map.from_dict(data)
     db.session.add(url_map)
