@@ -1,7 +1,9 @@
 from datetime import datetime
 
-from settings import SHORT_URL_MAX_LENGHT
-from yacut import db
+from flask import url_for
+
+from . import db
+from .constants import SHORT_URL_MAX_LENGHT
 
 
 class URLMap(db.Model):
@@ -9,3 +11,13 @@ class URLMap(db.Model):
     original = db.Column(db.String, nullable=False)
     short = db.Column(db.String(SHORT_URL_MAX_LENGHT), unique=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def to_dict(self):
+        return dict(
+            url=self.original,
+            short_link=url_for('short_view', short=self.short, _external=True)
+        ),
+
+    def from_dict(self, data):
+        setattr(self, 'original', data['url'])
+        setattr(self, 'short', data['custom_id'])

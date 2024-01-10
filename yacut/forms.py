@@ -4,7 +4,7 @@ from wtforms.validators import (
     Length, DataRequired, URL, Optional, Regexp, ValidationError
 )
 
-from settings import (
+from .constants import (
     LONG_URL_MAX_LENGHT, SHORT_URL_MAX_LENGHT, WRONG_LENGTH, WRONG_BLANK,
     WRONG_URL, PATTERN_SHORT_URL, WRONG_CHARS_URL, WRONG_UNIQUE,
     FORM_LABEL_LONG_URL, FORM_LABEL_SHOT_URL, FORM_LABEL_BUTTON_CREATE

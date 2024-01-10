@@ -3,13 +3,13 @@ from random import choices
 
 from flask import flash, url_for, render_template, redirect
 
-from settings import ALLOW_URL_CHARS, SHORT_URL_LENGHT
 from . import app, db
+from .constants import ALLOW_SHORT_URL_CHARS, SHORT_URL_LENGHT
 from .forms import URLMapForm
 from .models import URLMap
 
 
-def get_unique_short_id(chars=ALLOW_URL_CHARS, lenght=SHORT_URL_LENGHT):
+def get_unique_short_id(chars=ALLOW_SHORT_URL_CHARS, lenght=SHORT_URL_LENGHT):
     while True:
         unique_short_id = ''.join(choices(chars, k=lenght))
         if not URLMap.query.filter_by(short=unique_short_id).first():
