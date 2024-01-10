@@ -3,7 +3,7 @@ from http import HTTPStatus
 from flask import jsonify, request
 
 from . import app, db
-from .constants import WRONG_API_ID_NOT_FOUND, WRONG_API_NOT_DATA_IN_REQUEST
+from .constants import WRONG_API_ID_NOT_FOUND
 from .error_handlers import InvalidAPIUsage
 from .models import URLMap
 from .validators import validate_long_url, validate_short_url
