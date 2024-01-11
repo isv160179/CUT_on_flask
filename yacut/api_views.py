@@ -12,7 +12,7 @@ from .views import get_unique_short_id
 
 @app.route('/api/id/', methods=['POST'])
 def create_id():
-    data = request.get_json()
+    data: dict = request.get_json()
     validate_long_url(data)
     if not data.get('custom_id'):
         data['custom_id'] = get_unique_short_id()
